@@ -5,30 +5,27 @@ public class NumToStringConverter
 {
     private readonly BelowTwentyDictionary below20;
     private readonly TensDictionary ten;
-    private readonly StringBuilder stringBuilder;
     private readonly HundredsDictionary hundreds;
     public NumToStringConverter()
     {
         below20 = new BelowTwentyDictionary();
         ten = new TensDictionary();
         hundreds = new HundredsDictionary();
-        stringBuilder = new StringBuilder();
     }
 
     public void ConvertNumberToText()
     {
-        stringBuilder.Clear();
         var num = ReadUserInput();
 
-        if (int.Parse(num) > 0 && int.Parse(num) < 20)
+        if (int.Parse(num) >= 0 && int.Parse(num) < 20)
         {
-            Console.WriteLine(GetTextForSingleDigitNumber(num)); 
+            Console.WriteLine(GetTextForSingleDigitNumber(num));
         }
 
         if (num.Length == 2 && int.Parse(num) > 19 && int.Parse(num) < 100)
         {
             Console.WriteLine(GetTextForTwoDigitNumber(num));
-           
+
         }
 
         if (num.Length == 3 && int.Parse(num) > 99 && int.Parse(num) < 999)
@@ -67,70 +64,67 @@ public class NumToStringConverter
 
     private string GetTextForTwoDigitNumber(string num)
     {
+        var stringBuilder = new StringBuilder();
         var numToInt = int.Parse(num);
+        var tensCount = numToInt / 10;
+        var getTens = ten.GetTens();
+        var getBelow20 = below20.GetBelow20();
+        var remainderFrom20 = numToInt % 20;
 
-        if (ten.GetTens().ContainsKey(numToInt))
+        if (numToInt % 20 == 0)
         {
-            return ten.GetTens()[numToInt];
+            if (getTens.ContainsKey(tensCount))
+            {
+                stringBuilder.Append(getTens[tensCount]);
+                stringBuilder.Replace("და", "ი");
+                return stringBuilder.ToString();
+            }
         }
 
-        var firstDigit = int.Parse(num.Substring(0, 1));
-        if (firstDigit % 2 != 0)
+        if (numToInt % 20 != 0)
         {
-            var firstNum = numToInt - 10 - (numToInt % 10);
-            var lastNum = 10 + (numToInt % 10);
-
-            return ten.GetTens()[firstNum].Replace("ი", "და") + below20.GetBelow20()[lastNum];
-        }
-
-        if (firstDigit % 2 == 0)
-        {
-            var firstNum = numToInt - (numToInt % 10);
-            var lastNum = numToInt % 10;
-
-            return ten.GetTens()[firstNum].Replace("ი", "და") + below20.GetBelow20()[lastNum];
+            if (getTens.ContainsKey(tensCount))
+            {
+                stringBuilder.Append(getTens[tensCount]);
+                stringBuilder.Append(getBelow20[remainderFrom20]);
+                return stringBuilder.ToString();
+            }
         }
 
         return string.Empty;
     }
 
+
     private string GetTextForThreeDigitNumber(string num)
     {
-        int numToInt = int.Parse(num);
+        var stringBuilder = new StringBuilder();
+        var numToInt = int.Parse(num);
+        var reminderFromHundred = numToInt % 100;
         var hundredsCount = numToInt / 100;
+        var getHundreds = hundreds.GetHundreds();
 
         if (numToInt % 100 == 0)
         {
-            return hundreds.GetHundreds()[hundredsCount];
+            stringBuilder.Append(getHundreds[hundredsCount]);
+            stringBuilder.Append('ი');
+            return stringBuilder.ToString();
         }
 
-        if (numToInt % 100 != 0 && hundredsCount > 0)
+        if (numToInt % 100 != 0)
         {
+            stringBuilder.Append(getHundreds[hundredsCount]);
 
-            stringBuilder.Append(hundreds.GetHundreds()[hundredsCount]);
-            stringBuilder.Remove(stringBuilder.Length - 1, 1);
-
-            var lastTwoDigits = num.Substring(1, 2);
-            if (lastTwoDigits[0] == '0')
+            if (reminderFromHundred < 20)
             {
-                lastTwoDigits = lastTwoDigits.Substring(1);
+                stringBuilder.Append(GetTextForSingleDigitNumber(reminderFromHundred.ToString()));
             }
-
-            var lastTwoDigitsInInt = int.Parse(lastTwoDigits);
-
-            if (lastTwoDigitsInInt < 20)
+            else
             {
-                stringBuilder.Append(GetTextForSingleDigitNumber(lastTwoDigits));
-                return stringBuilder.ToString();
+                stringBuilder.Append(GetTextForTwoDigitNumber(reminderFromHundred.ToString()));
             }
-
-            if (lastTwoDigitsInInt > 19 && lastTwoDigitsInInt < 100)
-            {
-                stringBuilder.Append(GetTextForTwoDigitNumber(lastTwoDigits));
-                return stringBuilder.ToString();
-            }
+            return stringBuilder.ToString();
         }
-        return stringBuilder.ToString();
+        return string.Empty;
     }
 }
 
