@@ -1,7 +1,7 @@
-﻿namespace GeorgianNumberToString;
-public class BelowTwentyDictionary
+﻿namespace NumberToString.GE.Dictionaries;
+public class BelowTwentyDictionary_GE
 {
-    public Dictionary<int, string> GetBelow20()
+    public static Dictionary<int, string> GetBelow20_GE()
     {
         return new Dictionary<int, string>
         {

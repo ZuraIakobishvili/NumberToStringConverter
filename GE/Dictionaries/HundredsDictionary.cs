@@ -1,7 +1,7 @@
-﻿namespace GeorgianNumberToString;
+﻿namespace NumberToString.GE.Dictionaries;
 public class HundredsDictionary
 {
-    public Dictionary<int, string> GetHundreds()
+    public static Dictionary<int, string> GetHundreds()
     {
         return new Dictionary<int, string>
         {

@@ -1,15 +1,12 @@
 ﻿using System.Text;
 
-namespace GeorgianNumberToString;
+namespace NumberToString;
 public class Program
 {
-   static void Main(string[] args)
+    static void Main()
     {
-        var converter = new NumToStringConverter();
         Console.OutputEncoding = Encoding.UTF8;
-        while (true)
-        {
-            converter.ConvertNumberToText();
-        }
+        var converter = new ConverterService();
+        converter.NumConverter();
     }
 }

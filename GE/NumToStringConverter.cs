@@ -1,34 +1,29 @@
 ﻿using System.Text;
+using NumberToString.GE.Dictionaries;
 
-namespace GeorgianNumberToString;
+namespace NumberToString.GE;
 public class NumToStringConverter
 {
-    private readonly BelowTwentyDictionary below20;
-    private readonly TensDictionary ten;
-    private readonly HundredsDictionary hundreds;
-    public NumToStringConverter()
-    {
-        below20 = new BelowTwentyDictionary();
-        ten = new TensDictionary();
-        hundreds = new HundredsDictionary();
-    }
+    private const int MaxSingleDigitNumber = 20;
+    private const int MaxTwoDigitNumber = 100;
+    private const int MaxThreeDigitNumber = 1000;
 
     public void ConvertNumberToText()
     {
         var num = ReadUserInput();
 
-        if (int.Parse(num) >= 0 && int.Parse(num) < 20)
+        if (int.Parse(num) >= 0 && int.Parse(num) < MaxSingleDigitNumber)
         {
             Console.WriteLine(GetTextForSingleDigitNumber(num));
         }
 
-        if (num.Length == 2 && int.Parse(num) > 19 && int.Parse(num) < 100)
+        if (num.Length == 2 && int.Parse(num) > MaxSingleDigitNumber && int.Parse(num) < MaxTwoDigitNumber)
         {
             Console.WriteLine(GetTextForTwoDigitNumber(num));
 
         }
 
-        if (num.Length == 3 && int.Parse(num) > 99 && int.Parse(num) < 999)
+        if (num.Length == 3 && int.Parse(num) > MaxTwoDigitNumber && int.Parse(num) < MaxThreeDigitNumber)
         {
             Console.WriteLine(GetTextForThreeDigitNumber(num));
         }
@@ -37,12 +32,12 @@ public class NumToStringConverter
 
     private string ReadUserInput()
     {
-        Console.WriteLine("Enter number: ");
+        Console.WriteLine("შეიყვანეტ რიცხვი: ");
         var num = Console.ReadLine();
 
         if (!int.TryParse(num, out _))
         {
-            throw new Exception("Invalid input. Please enter a valid number.");
+            throw new Exception("გთხოვთ შეიყვანოთ სწორი მონაცემები.");
         }
 
         return num;
@@ -52,7 +47,7 @@ public class NumToStringConverter
     {
         if (int.Parse(num) < 20)
         {
-            var getBelow20 = below20.GetBelow20();
+            var getBelow20 = BelowTwentyDictionary_GE.GetBelow20_GE();
             var key = int.Parse(num);
             if (getBelow20.ContainsKey(key))
             {
@@ -67,8 +62,8 @@ public class NumToStringConverter
         var stringBuilder = new StringBuilder();
         var numToInt = int.Parse(num);
         var tensCount = numToInt / 10;
-        var getTens = ten.GetTens();
-        var getBelow20 = below20.GetBelow20();
+        var getTens = TensDictionary.GetTens();
+        var getBelow20 = BelowTwentyDictionary_GE.GetBelow20_GE();
         var remainderFrom20 = numToInt % 20;
 
         if (numToInt % 20 == 0)
@@ -94,14 +89,13 @@ public class NumToStringConverter
         return string.Empty;
     }
 
-
     private string GetTextForThreeDigitNumber(string num)
     {
         var stringBuilder = new StringBuilder();
         var numToInt = int.Parse(num);
         var reminderFromHundred = numToInt % 100;
         var hundredsCount = numToInt / 100;
-        var getHundreds = hundreds.GetHundreds();
+        var getHundreds = HundredsDictionary.GetHundreds();
 
         if (numToInt % 100 == 0)
         {
