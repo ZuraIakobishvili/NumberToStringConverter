@@ -1,5 +1,5 @@
 ﻿namespace NumberToString.GE.Dictionaries;
-public class TensDictionary
+public class TensDictionary_GE
 {
     public static Dictionary<int, string> GetTens()
     {

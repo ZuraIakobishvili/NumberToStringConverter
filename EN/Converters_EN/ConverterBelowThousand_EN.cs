@@ -1,7 +1,7 @@
 ﻿using NumberToString.EN.Dictionaries;
 using System.Text;
 
-namespace NumberToString.EN.Converters;
+namespace NumberToString.EN.Converters_EN;
 
 public interface IConverterBelowThousand_EN
 {
@@ -10,8 +10,6 @@ public interface IConverterBelowThousand_EN
 
 public class ConverterBelowThousand_EN : IConverterBelowThousand_EN
 {
-    private static int MaxUnderThousandNum = 1000;
-    private static int MinUnderThousandNum = 99;
     private readonly IConverterBelowTwenty_EN _converterBelow20;
     private readonly IConverterBelowHundred_EN _converterBelowHundred;
     public ConverterBelowThousand_EN()
@@ -27,15 +25,13 @@ public class ConverterBelowThousand_EN : IConverterBelowThousand_EN
         var reminderFromNum = num % 100;
         var hundreds = HundredsDictionary_EN.GetHundreds_EN();
 
-        if (num > MinUnderThousandNum && num < MaxUnderThousandNum)
-        {
             if (reminderFromNum == 0)
             {
                 stringBuilder.Append(hundreds[hundredsCount]);
                 return stringBuilder.ToString();
             }
 
-            if(reminderFromNum != 0)
+            if (reminderFromNum != 0)
             {
                 stringBuilder.Append(hundreds[hundredsCount]);
 
@@ -49,8 +45,8 @@ public class ConverterBelowThousand_EN : IConverterBelowThousand_EN
                     stringBuilder.Append(_converterBelowHundred.GetTextBelowOneHundred(reminderFromNum));
                 }
                 return stringBuilder.ToString();
-            }
         }
+
         return string.Empty;
     }
 }

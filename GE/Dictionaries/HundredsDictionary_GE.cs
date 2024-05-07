@@ -1,5 +1,5 @@
 ﻿namespace NumberToString.GE.Dictionaries;
-public class HundredsDictionary
+public class HundredsDictionary_GE
 {
     public static Dictionary<int, string> GetHundreds()
     {

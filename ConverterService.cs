@@ -1,4 +1,5 @@
-﻿using NumberToString.EN.Converters;
+﻿using NumberToString.EN.Converters_EN;
+using NumberToString.GE.Converters_GE;
 using NumberToString.Shared;
 
 namespace NumberToString;
@@ -9,30 +10,46 @@ public interface IConverterService
 }
 public class ConverterService : IConverterService
 {
-    private readonly IConverterBelowTwenty_EN _convertTextUnderTwenty_EN;
-    private readonly IConverterBelowHundred_EN _convertTextUnderHundred_EN;
-    private readonly IConverterBelowThousand_EN _convertTextUnderThousand_EN;
+    private readonly IConverterBelowTwenty_EN _convertBelowTwenty_EN;
+    private readonly IConverterBelowHundred_EN _convertBelowHundred_EN;
+    private readonly IConverterBelowThousand_EN _convertBelowThousand_EN;
+
+    private readonly IConverterBelowTwenty_GE _converterBelowTwenty_GE;
+    private readonly IConverterBelowHundred_GE _converterBelowHundred_GE;
+    private readonly IConverterBelowThousand_GE _converterBelowThousand_GE;
+
+    private const int MaxNumBelowTwenty = 20;
+    private const int MinNumBelowTwenty = 0;
+    private const int MaxNumBelowHundred = 100;
+    private const int MinNumBelowHundred = 19;
+    private const int MaxNumBelowThousand = 1000;
+    private const int MinNumBelowThousand = 99;
+
     public ConverterService()
     {
-        _convertTextUnderHundred_EN = new ConverterBelowHundred_EN();
-        _convertTextUnderTwenty_EN = new ConverterBelowTwenty_EN();
-        _convertTextUnderThousand_EN = new ConverterBelowThousand_EN();
+        _convertBelowHundred_EN = new ConverterBelowHundred_EN();
+        _convertBelowTwenty_EN = new ConverterBelowTwenty_EN();
+        _convertBelowThousand_EN = new ConverterBelowThousand_EN();
+
+        _converterBelowTwenty_GE = new ConverterBelowTwenty_GE();
+        _converterBelowHundred_GE = new ConverterBelowHundred_GE();
+        _converterBelowThousand_GE = new ConverterBelowThousand_GE();
     }
     private string ConvertString_EN(int num)
     {
-        if (num > 0 && num < 20)
+        if (num > MinNumBelowTwenty && num < MaxNumBelowTwenty)
         {
-            return _convertTextUnderTwenty_EN.GetTextFromNumberBelowTwenty(num);
+            return _convertBelowTwenty_EN.GetTextFromNumberBelowTwenty(num);
         }
 
-        if (num >= 20 && num < 100)
+        if (num > MinNumBelowHundred && num < MaxNumBelowHundred)
         {
-            return _convertTextUnderHundred_EN.GetTextBelowOneHundred(num);
+            return _convertBelowHundred_EN.GetTextBelowOneHundred(num);
         }
 
-        if (num >= 100 && num < 1000)
+        if (num > MinNumBelowThousand && num < MaxNumBelowThousand)
         {
-            return _convertTextUnderThousand_EN.GetTextFromNumberUnderThousand(num);
+            return _convertBelowThousand_EN.GetTextFromNumberUnderThousand(num);
         }
 
         return string.Empty;
@@ -40,14 +57,19 @@ public class ConverterService : IConverterService
 
     private string ConvertString_GE(int num)
     {
-        if (num > 0 && num < 20)
+        if (num > MinNumBelowTwenty && num < MaxNumBelowTwenty)
         {
-            return _convertTextUnderTwenty_EN.GetTextFromNumberBelowTwenty(num);
+            return _converterBelowTwenty_GE.GetTextFromNumberBelowTwenty(num);
         }
 
-        if (num >= 20 && num < 100)
+        if (num > MinNumBelowHundred && num < MaxNumBelowHundred)
         {
-            return _convertTextUnderHundred_EN.GetTextBelowOneHundred(num);
+            return _converterBelowHundred_GE.GetTextFromNumberBelowHundred(num);
+        }
+
+        if(num > MinNumBelowThousand && num < MaxNumBelowThousand)
+        {
+            return _converterBelowThousand_GE.GetTextForThreeDigitNumber(num);
         }
 
         return string.Empty;
@@ -64,16 +86,15 @@ public class ConverterService : IConverterService
             switch (lang)
             {
                 case "1":
-                    var num = int.Parse(UserHelper.ReadUserInput_EN());
-                    Console.WriteLine(ConvertString_EN(num));
+                    var num_EN = int.Parse(UserHelper.ReadUserInput_EN());
+                    Console.WriteLine(ConvertString_EN(num_EN));
                     break;
 
                 case "2":
-                    var num1 = int.Parse(UserHelper.ReadUserInput_GE());
-                    Console.WriteLine(ConvertString_GE(num1));
+                    var num_GE = int.Parse(UserHelper.ReadUserInput_GE());
+                    Console.WriteLine(ConvertString_GE(num_GE));
                     break;
             }
-
         }
     }
 }
